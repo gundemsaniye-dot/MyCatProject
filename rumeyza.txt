@@ -1,1 +1,10 @@
-rumeyza
+Kendi bilgisayarında değişiklikleri GitHub’a göndermek için:
+cd /Users/mac/MyCatProject
+git add .
+git commit -m "değişiklik açıklaması"
+git push origin main
+
+
+Diğer bilgisayarda projeyi senkronlamak için:
+cd /proje/klasörünün/yolu/MyCatProject
+git pull origin main
