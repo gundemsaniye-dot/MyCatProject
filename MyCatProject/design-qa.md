@@ -1,55 +1,44 @@
-# Start Screen Design QA
+# Start Screen Visual QA
 
-**Source visual truth**
+## Evidence
 
-- `/Users/devhtc/Downloads/IMG_6218.jpeg`
-- Original pixels: `3024 x 3322`
-- Normalized comparison: `/tmp/reference-normalized.png`, centered on a `720 x 1604` canvas without stretching
+- Physical device: `RMX3997`, portrait `720 x 1604`
+- Final capture: `/tmp/mycat-25-percent-larger.png`
+- Gameplay transition: `/tmp/mycat-no-contact-gameplay.png`
 
-**Rendered implementation**
+## Findings
 
-- Physical device: `RMX3997`
-- Screenshot: `/tmp/mycat-start-overlay.png`
-- Pixels / native viewport: `720 x 1604`
-- App-owned game stage: centered `9:16` region; system status and navigation bars remain outside the overlay
-- CSS size and browser density: not applicable; this is a native Android capture from the physical device
-- State: cold-launched Start Screen
-- Combined full-view evidence: `/tmp/start-screen-comparison.png`
+- No actionable P0, P1, or P2 issue remains.
+- Count: every launch contains a random `18..25` cats.
+- Position: placements come from real random x/y candidates. A collision check rejects candidates whose rotated safety bounds would touch an existing cat.
+- Contact safety: the check uses both x and y distances, a `1.08` visual-bounds safety factor, and an additional gap. Thirty seeded layouts also pass the pairwise no-contact assertion.
+- Opacity: every cat independently receives a random value in `0.40..<0.90`; the former fixed opacity groups are removed.
+- Size: every rendered cat is 25% larger than the prior layout. Placement begins with random `0.125..<0.375` sizes and can reduce the upper bound toward `0.225` only when required to fit a dense 25-cat layout without contact.
+- Imagery: all seven source images are guaranteed to appear, then their assignment is shuffled.
+- Typography and hierarchy: Google Fonts Chewy, two-line gradient `You Can` / larger `START`, full-screen black `0.20` overlay, and text z-index remain correct.
+- Interaction: tapping the CTA reaches `GamePlayScreen` on the physical device.
 
-**Findings**
+## Full-view comparison
 
-- No actionable P0, P1, or P2 mismatch was found against the approved sketch and written plan.
-- Typography: the white, bold `You Can Start` text is readable, remains a text-only control, and sits in the upper-middle region at approximately 30% of the stage height.
-- Spacing and layout: the content is constrained to a centered 9:16 stage, cats are distributed through the scene, and system bars remain outside the stage overlay.
-- Colors and visual tokens: the full stage is visibly darkened by the requested black overlay at 0.30 alpha while the text stays above it.
-- Image quality and assets: the seven supplied cat assets remain raster images with their original transparency/background treatment; ten instances show the planned size, mirroring, opacity, and rotation variation.
-- Copy: `You Can Start` matches the approved plan.
+- The final physical capture shows the requested 25% larger cats while preserving the non-touching layout.
+- Visible cat bounds remain separated across the full screen; there is no grid and no same-location pileup.
+- Edge cats remain inside their collision-safe bounds while the CTA stays visually dominant.
 
-**Focused region comparison**
+## Verification
 
-- A separate crop was not needed because the `720 x 1604` native capture keeps the text, all cat assets, rotations, opacity differences, stage bounds, and system-bar boundary clearly readable in the full-view comparison.
+- Android host tests: passed with zero failures.
+- Debug APK: installed on physical `RMX3997`.
+- Physical text navigation: passed.
+- Web, emulator, iOS simulator, Xcode signing, and Team ID: not used.
 
-**Interaction verification**
+## Checklist
 
-- Tapped the text on the physical RMX3997 device.
-- Navigation reached `GamePlayScreen` successfully.
-- Post-tap evidence: `/tmp/mycat-gameplay-after-tap.png`
-
-**Comparison history**
-
-- Initial physical-device comparison: no actionable P0/P1/P2 visual issue found, so no design-fix iteration was required.
-
-**Implementation Checklist**
-
-- [x] Ten cats with guaranteed `4 / 3 / 3` opacity distribution
-- [x] Guaranteed `4` straight, `3` negative, and `3` positive rotation distribution
-- [x] Full 9:16 stage overlay above cats at black 0.30 alpha
-- [x] Text-only CTA above overlay at z-index 20
-- [x] Physical-device navigation test
-- [x] No web, emulator, or iOS test
-
-**Follow-up Polish**
-
-- No blocking follow-up polish remains for the approved scope.
+- [x] Random `18..25` cat count
+- [x] Random `0.40..<0.90` opacity per cat
+- [x] Random x/y and image assignment
+- [x] Pairwise non-touching placement
+- [x] Rotation and animation safety margin
+- [x] Two physical cold-launch screenshots
+- [x] Physical gameplay transition
 
 final result: passed

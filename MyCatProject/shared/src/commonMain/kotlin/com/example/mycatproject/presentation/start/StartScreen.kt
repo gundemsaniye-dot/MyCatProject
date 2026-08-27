@@ -11,24 +11,28 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -37,6 +41,7 @@ import androidx.compose.ui.zIndex
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.mycatproject.domain.model.StartCat
 import mycatproject.shared.generated.resources.Res
+import mycatproject.shared.generated.resources.chewy_regular
 import mycatproject.shared.generated.resources.start_screen_cat_image_1
 import mycatproject.shared.generated.resources.start_screen_cat_image_2
 import mycatproject.shared.generated.resources.start_screen_cat_image_3
@@ -45,6 +50,7 @@ import mycatproject.shared.generated.resources.start_screen_cat_image_5
 import mycatproject.shared.generated.resources.start_screen_cat_image_6
 import mycatproject.shared.generated.resources.start_screen_cat_image_7
 import org.jetbrains.compose.resources.DrawableResource
+import org.jetbrains.compose.resources.Font
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
@@ -74,8 +80,7 @@ fun StartScreen(
                         Color(0xFFF7C9B6),
                     ),
                 ),
-            )
-            .safeContentPadding(),
+            ),
     ) {
         val containerRatio = maxWidth.value / maxHeight.value
         val stageModifier = if (containerRatio > MOBILE_STAGE_RATIO) {
@@ -89,7 +94,10 @@ fun StartScreen(
         }
 
         BoxWithConstraints(
-            modifier = stageModifier.align(Alignment.Center),
+            modifier = Modifier
+                .fillMaxSize()
+                .clipToBounds()
+                .zIndex(1f),
         ) {
             val shortestSide = minOf(maxWidth, maxHeight)
 
@@ -102,27 +110,94 @@ fun StartScreen(
                 )
             }
 
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .zIndex(10f)
-                    .background(Color.Black.copy(alpha = 0.30f)),
+        }
+
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .zIndex(10f)
+                .background(Color.Black.copy(alpha = 0.20f)),
+        )
+
+        BoxWithConstraints(
+            modifier = stageModifier
+                .align(Alignment.Center)
+                .zIndex(20f),
+        ) {
+            val chewyFont = FontFamily(
+                Font(
+                    resource = Res.font.chewy_regular,
+                    weight = FontWeight.Normal,
+                ),
+            )
+            val isCompactStage = maxWidth < 420.dp
+            val youCanStyle = MaterialTheme.typography.headlineMedium.copy(
+                fontFamily = chewyFont,
+                fontSize = if (isCompactStage) 40.sp else 48.sp,
+                fontWeight = FontWeight.Normal,
+                lineHeight = if (isCompactStage) 42.sp else 50.sp,
+                letterSpacing = 0.5.sp,
+                shadow = CTA_TEXT_SHADOW,
+            )
+            val startStyle = MaterialTheme.typography.displayMedium.copy(
+                fontFamily = chewyFont,
+                fontSize = if (isCompactStage) 68.sp else 82.sp,
+                fontWeight = FontWeight.Normal,
+                lineHeight = if (isCompactStage) 70.sp else 84.sp,
+                letterSpacing = 1.5.sp,
+                shadow = CTA_TEXT_SHADOW,
             )
 
-            Text(
-                text = "You Can Start",
+            Column(
                 modifier = Modifier
                     .align(Alignment.TopCenter)
-                    .offset(y = maxHeight * 0.30f - 24.dp)
+                    .offset(y = maxHeight * 0.23f)
                     .zIndex(20f)
                     .clickable(onClick = onStartClick)
                     .padding(horizontal = 20.dp, vertical = 16.dp),
-                color = Color.White,
-                style = MaterialTheme.typography.headlineMedium.copy(
-                    fontSize = if (maxWidth < 420.dp) 25.sp else 32.sp,
-                    fontWeight = FontWeight.Black,
-                ),
-            )
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Box(contentAlignment = Alignment.Center) {
+                    Text(
+                        text = "You Can",
+                        modifier = Modifier.offset(x = 2.dp, y = 4.dp),
+                        color = Color.Black.copy(alpha = 0.70f),
+                        style = youCanStyle,
+                    )
+                    Text(
+                        text = "You Can",
+                        style = youCanStyle.copy(
+                        brush = Brush.horizontalGradient(
+                            colors = listOf(
+                                Color(0xFFFFF3B0),
+                                Color(0xFFFFB347),
+                                Color(0xFFFF6B6B),
+                            ),
+                        ),
+                    ),
+                    )
+                }
+                Box(contentAlignment = Alignment.Center) {
+                    Text(
+                        text = "START",
+                        modifier = Modifier.offset(x = 3.dp, y = 5.dp),
+                        color = Color.Black.copy(alpha = 0.70f),
+                        style = startStyle,
+                    )
+                    Text(
+                        text = "START",
+                        style = startStyle.copy(
+                        brush = Brush.horizontalGradient(
+                            colors = listOf(
+                                Color(0xFFFFD166),
+                                Color(0xFFFF5C8A),
+                                Color(0xFFB84CFF),
+                            ),
+                        ),
+                    ),
+                    )
+                }
+            }
         }
     }
 }
@@ -134,9 +209,9 @@ private fun AnimatedCat(
     containerHeight: Dp,
     shortestSide: Dp,
 ) {
-    val size = (shortestSide * cat.sizeFraction).coerceIn(76.dp, 220.dp)
-    val x = (containerWidth - size) * cat.horizontalFraction
-    val y = (containerHeight - size) * cat.verticalFraction
+    val size = shortestSide * cat.sizeFraction
+    val x = containerWidth * cat.horizontalFraction - size / 2
+    val y = containerHeight * cat.verticalFraction - size / 2
     val density = LocalDensity.current
     val bounceDistancePx = with(density) { (size * cat.bounceFraction).toPx() }
     val transition = rememberInfiniteTransition(label = "cat-${cat.id}")
@@ -183,3 +258,8 @@ private fun StartCat.drawableResource(): DrawableResource = when (imageIndex) {
 }
 
 private const val MOBILE_STAGE_RATIO = 9f / 16f
+private val CTA_TEXT_SHADOW = Shadow(
+    color = Color(0x99000000),
+    offset = Offset(0f, 5f),
+    blurRadius = 10f,
+)
