@@ -17,6 +17,17 @@ kotlin {
             isStatic = true
         }
     }
+
+    js {
+        browser()
+    }
+
+    @OptIn(org.jetbrains.kotlin.gradle.ExperimentalWasmDsl::class)
+    wasmJs {
+        browser()
+    }
+
+    applyDefaultHierarchyTemplate()
     
     android {
        namespace = "com.example.mycatproject.shared"
