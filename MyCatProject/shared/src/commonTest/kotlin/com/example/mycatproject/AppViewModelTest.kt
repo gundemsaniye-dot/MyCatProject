@@ -14,4 +14,14 @@ class AppViewModelTest {
         viewModel.openGamePlay()
         assertEquals(AppDestination.GamePlay, viewModel.currentDestination)
     }
+
+    @Test
+    fun youDieClickReturnsToStart() {
+        val viewModel = AppViewModel()
+        viewModel.openGamePlay()
+
+        viewModel.openStart()
+
+        assertEquals(AppDestination.Start, viewModel.currentDestination)
+    }
 }

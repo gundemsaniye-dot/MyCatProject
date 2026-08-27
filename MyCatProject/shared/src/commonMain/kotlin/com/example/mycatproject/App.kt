@@ -11,7 +11,11 @@ import com.example.mycatproject.presentation.start.StartScreenRoute
 
 @Composable
 @Preview
-fun App() {
+fun App(
+    onBrushHaptic: () -> Unit = {},
+    onCatTurnSound: () -> Unit = {},
+    onCaughtSound: () -> Unit = {},
+) {
     val appViewModel = viewModel { AppViewModel() }
 
     MaterialTheme {
@@ -20,7 +24,12 @@ fun App() {
                 onStartClick = appViewModel::openGamePlay,
             )
 
-            AppDestination.GamePlay -> GamePlayScreen()
+            AppDestination.GamePlay -> GamePlayScreen(
+                onBrushHaptic = onBrushHaptic,
+                onCatTurnSound = onCatTurnSound,
+                onCaughtSound = onCaughtSound,
+                onYouDieClick = appViewModel::openStart,
+            )
         }
     }
 }

@@ -13,4 +13,8 @@ class AppViewModel : ViewModel() {
     fun openGamePlay() {
         currentDestination = AppDestination.GamePlay
     }
+
+    fun openStart() {
+        currentDestination = AppDestination.Start
+    }
 }
